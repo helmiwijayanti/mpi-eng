@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="data:," />
+  <title>Game Past Tense</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap');
+
+    :root {
+      color-scheme: light dark;
+      --paper: #f6f2e8;
+      --paper-2: #ece5d5;
+      --ink: #172128;
+      --muted: #59656b;
+      --line: #c9c2b4;
+      --panel: #fffdf7;
+      --navy: #15344b;
+      --orange: #e65e2f;
+      --orange-soft: #ffddc9;
+      --teal: #1b7c73;
+      --teal-soft: #d6eee8;
+      --gold: #d49a22;
+      --danger: #b93632;
+      --danger-soft: #f9d9d2;
+      --shadow: 0 14px 38px rgba(23, 33, 40, .12);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --paper: #13191d;
+        --paper-2: #0d1215;
+        --ink: #f5f0e6;
+        --muted: #b3bec2;
+        --line: #3c484d;
+        --panel: #1c252a;
+        --navy: #bfe1f3;
+        --orange: #ff845d;
+        --orange-soft: #4b2b20;
+        --teal: #59c6b8;
+        --teal-soft: #193c39;
+        --gold: #f0bf55;
+        --danger: #ff8279;
+        --danger-soft: #482525;
+        --shadow: 0 18px 42px rgba(0,0,0,.32);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { min-height: 100%; background: var(--paper-2); }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, transparent 49.7%, color-mix(in srgb, var(--line) 20%, transparent) 50%, transparent 50.3%),
+        var(--paper);
+      font-family: "DM Sans", sans-serif;
+      line-height: 1.45;
+    }
+    button { font: inherit; }
+    button, [draggable="true"] { -webkit-tap-highlight-color: transparent; }
+    .app { width: min(1120px, 100%); margin: 0 auto; padding: 26px 24px 58px; }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: end;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    .mission-label {
+      margin: 0 0 6px;
+      color: var(--orange);
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-size: .73rem;
+    }
+    h1 {
+      margin: 0;
+      max-width: 760px;
+      color: var(--navy);
+      font-family: "Manrope", sans-serif;
+      font-size: clamp(1.8rem, 5vw, 3.55rem);
+      line-height: .99;
+      letter-spacing: -.055em;
+    }
+    .scoreboard { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+    .stat {
+      min-width: 76px;
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 5px;
+      text-align: center;
+      box-shadow: 3px 3px 0 color-mix(in srgb, var(--line) 70%, transparent);
+    }
+    .stat span { display: block; color: var(--muted); font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+    .stat strong { display: block; margin-top: 1px; font: 800 1.2rem "Manrope", sans-serif; color: var(--navy); }
+    .stat.danger strong { color: var(--danger); }
+
+    .progress-wrap { margin: 18px 0 24px; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; }
+    .progress-track { height: 7px; background: var(--paper-2); border: 1px solid var(--line); overflow: hidden; }
+    .progress-bar { height: 100%; width: 0%; background: var(--orange); transition: width .35s ease; }
+    .progress-text { font-size: .82rem; color: var(--muted); font-weight: 700; }
+
+    .intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(260px, .75fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+    .briefing, .mode-card, .game-panel, .result-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .briefing { padding: clamp(22px, 4vw, 42px); position: relative; overflow: hidden; }
+    .briefing:after {
+      content: "V2";
+      position: absolute;
+      right: -12px;
+      bottom: -34px;
+      font: 800 clamp(7rem, 20vw, 13rem)/1 "Manrope", sans-serif;
+      color: color-mix(in srgb, var(--orange) 8%, transparent);
+      pointer-events: none;
+    }
+    .briefing h2, .mode-card h2, .level-copy h2, .result-panel h2 { font-family: "Manrope", sans-serif; color: var(--navy); letter-spacing: -.035em; }
+    .briefing h2 { margin: 0 0 12px; font-size: clamp(1.45rem, 3.2vw, 2.15rem); }
+    .briefing p { max-width: 650px; margin: 0 0 22px; color: var(--muted); font-size: 1.03rem; }
+    .rules { position: relative; z-index: 1; display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+    .rules li { display: grid; grid-template-columns: 28px 1fr; gap: 9px; align-items: start; }
+    .rules b { display: grid; place-items: center; width: 25px; height: 25px; background: var(--teal); color: #fff; border-radius: 50%; font-size: .78rem; }
+
+    .mode-card { padding: 25px; background: var(--navy); color: var(--paper); box-shadow: none; border-color: transparent; }
+    .mode-card h2 { color: var(--paper); margin: 0 0 16px; }
+    .mode-list { display: grid; gap: 10px; }
+    .mode {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid color-mix(in srgb, var(--paper) 30%, transparent);
+      background: transparent;
+      color: inherit;
+      text-align: left;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .mode:hover, .mode:focus-visible, .mode.active { background: var(--paper); color: var(--navy); outline: none; }
+    .mode strong { display: block; }
+    .mode small { opacity: .78; }
+    .start-btn, .primary-btn, .secondary-btn {
+      border: 0;
+      cursor: pointer;
+      font-weight: 800;
+      border-radius: 4px;
+    }
+    .start-btn { width: 100%; margin-top: 18px; padding: 14px 18px; background: var(--orange); color: #fff; box-shadow: 4px 4px 0 rgba(0,0,0,.25); }
+    .start-btn:hover, .primary-btn:hover { filter: brightness(1.06); }
+    .start-btn:active, .primary-btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 rgba(0,0,0,.25); }
+
+    .game-panel { display: none; }
+    .game-panel.active { display: block; }
+    .level-head { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 18px; align-items: start; padding: 25px 28px 20px; border-bottom: 1px solid var(--line); }
+    .level-no { color: var(--orange); font-weight: 800; font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; }
+    .level-copy h2 { margin: 4px 0 5px; font-size: clamp(1.4rem, 3vw, 2rem); }
+    .level-copy p { margin: 0; color: var(--muted); }
+    .tool-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .ghost-btn { padding: 9px 12px; border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 4px; cursor: pointer; font-weight: 700; }
+    .ghost-btn:hover, .ghost-btn:focus-visible { border-color: var(--teal); color: var(--teal); outline: none; }
+
+    .play-area { display: grid; grid-template-columns: minmax(210px, .72fr) minmax(0, 1.55fr); min-height: 440px; }
+    .word-bank { padding: 24px; background: var(--paper-2); border-right: 1px solid var(--line); }
+    .section-label { margin: 0 0 12px; color: var(--muted); font-weight: 800; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; }
+    .tokens { display: flex; flex-wrap: wrap; gap: 9px; align-content: flex-start; }
+    .token {
+      padding: 10px 13px;
+      border: 1px solid var(--navy);
+      background: var(--panel);
+      color: var(--navy);
+      border-radius: 4px;
+      font-weight: 800;
+      cursor: grab;
+      user-select: none;
+      box-shadow: 3px 3px 0 color-mix(in srgb, var(--navy) 18%, transparent);
+      transition: border-color .15s, background .15s, transform .15s;
+    }
+    .token:hover { transform: translateY(-2px); }
+    .token:focus-visible, .token.selected { outline: 3px solid color-mix(in srgb, var(--gold) 55%, transparent); outline-offset: 2px; background: var(--orange-soft); }
+    .token.dragging { opacity: .45; }
+    .token.used { opacity: .35; pointer-events: none; text-decoration: line-through; box-shadow: none; }
+
+    .targets { padding: 24px 28px 28px; display: grid; gap: 12px; align-content: start; }
+    .target {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) minmax(112px, .42fr);
+      gap: 14px;
+      align-items: center;
+      min-height: 68px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      background: color-mix(in srgb, var(--paper) 74%, transparent);
+      border-radius: 3px;
+    }
+    .target .prompt { font-weight: 600; }
+    .target .prompt small { display: block; color: var(--muted); font-weight: 500; }
+    .dropzone {
+      min-height: 42px;
+      display: grid;
+      place-items: center;
+      padding: 7px 10px;
+      border: 2px dashed var(--line);
+      color: var(--muted);
+      border-radius: 3px;
+      text-align: center;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .dropzone.over, .dropzone:focus-visible { border-color: var(--teal); background: var(--teal-soft); outline: none; }
+    .dropzone.correct { border-style: solid; border-color: var(--teal); color: var(--teal); background: var(--teal-soft); }
+    .dropzone.wrong { border-color: var(--danger); color: var(--danger); background: var(--danger-soft); animation: shake .28s linear; }
+    @keyframes shake { 25%{ transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+
+    .sequence-targets .target { grid-template-columns: 40px minmax(0,1fr); }
+    .sequence-targets .dropzone { min-height: 68px; justify-items: start; text-align: left; }
+    .ordinal { font: 800 1.3rem "Manrope", sans-serif; color: var(--orange); }
+    .sequence-tokens { display: grid; }
+    .sequence-tokens .token { line-height: 1.35; }
+
+    .feedback {
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 28px;
+      border-top: 1px solid var(--line);
+      background: var(--paper-2);
+    }
+    .feedback p { margin: 0; font-weight: 700; }
+    .feedback p.good { color: var(--teal); }
+    .feedback p.bad { color: var(--danger); }
+    .primary-btn { display: none; padding: 11px 16px; background: var(--orange); color: white; box-shadow: 3px 3px 0 rgba(0,0,0,.2); }
+    .primary-btn.show { display: inline-block; }
+
+    .result-panel { display: none; padding: clamp(26px, 6vw, 62px); text-align: center; }
+    .result-panel.active { display: block; }
+    .stamp { width: 112px; height: 112px; margin: 0 auto 18px; display: grid; place-items: center; border: 5px double var(--orange); border-radius: 50%; color: var(--orange); transform: rotate(-7deg); font: 800 .85rem/1.1 "Manrope", sans-serif; text-transform: uppercase; }
+    .result-panel h2 { margin: 0 0 10px; font-size: clamp(1.9rem, 5vw, 3.2rem); }
+    .result-panel > p { margin: 0 auto 28px; max-width: 600px; color: var(--muted); }
+    .result-grid { display: grid; grid-template-columns: repeat(3, 1fr); max-width: 680px; margin: 0 auto 28px; border: 1px solid var(--line); }
+    .result-stat { padding: 18px 10px; }
+    .result-stat + .result-stat { border-left: 1px solid var(--line); }
+    .result-stat strong { display: block; color: var(--navy); font: 800 1.65rem "Manrope", sans-serif; }
+    .result-stat span { color: var(--muted); font-size: .78rem; }
+    .secondary-btn { padding: 12px 18px; border: 1px solid var(--navy); background: transparent; color: var(--navy); }
+
+    .toast {
+      position: fixed;
+      left: 50%; bottom: max(20px, env(safe-area-inset-bottom));
+      transform: translate(-50%, 20px);
+      z-index: 10;
+      width: min(460px, calc(100% - 32px));
+      padding: 12px 16px;
+      background: var(--ink);
+      color: var(--paper);
+      border-radius: 4px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transition: .2s;
+      text-align: center;
+      font-weight: 700;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .confetti { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+    .confetti i { position:absolute; top:-20px; width:9px; height:16px; background:var(--orange); animation:fall 1.5s ease-in forwards; }
+    @keyframes fall { to { transform: translateY(105vh) rotate(620deg); opacity:.2; } }
+
+    @media (max-width: 760px) {
+      .app { padding: 18px 14px 36px; }
+      .topbar { grid-template-columns: 1fr; align-items: start; }
+      .scoreboard { justify-content: flex-start; }
+      .stat { flex: 1; min-width: 70px; }
+      .intro { grid-template-columns: 1fr; }
+      .mode-card { padding: 22px; }
+      .level-head { grid-template-columns: 1fr; padding: 20px; }
+      .tool-row { justify-content: flex-start; }
+      .play-area { grid-template-columns: 1fr; }
+      .word-bank { border-right: 0; border-bottom: 1px solid var(--line); padding: 18px; }
+      .targets { padding: 18px; }
+      .target { grid-template-columns: 1fr; gap: 8px; }
+      .sequence-targets .target { grid-template-columns: 34px 1fr; }
+      .feedback { padding: 12px 18px; align-items: flex-start; flex-direction: column; }
+      .primary-btn.show { width: 100%; }
+      .result-grid { grid-template-columns: 1fr; }
+      .result-stat + .result-stat { border-left: 0; border-top: 1px solid var(--line); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <p class="mission-label">English grammar challenge</p>
+        <h1>Operasi Waktu Lampau</h1>
+      </div>
+      <div class="scoreboard" aria-label="Status permainan">
+        <div class="stat"><span>Skor</span><strong id="score">0</strong></div>
+        <div class="stat"><span>Nyawa</span><strong id="lives">● ● ●</strong></div>
+        <div class="stat" id="timeStat"><span>Waktu</span><strong id="timer">∞</strong></div>
+      </div>
+    </header>
+
+    <div class="progress-wrap" aria-label="Progres permainan">
+      <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+      <div class="progress-text" id="progressText">Siap mulai</div>
+    </div>
+
+    <section class="intro" id="intro">
+      <article class="briefing">
+        <h2>Kasus semalam belum terpecahkan.</h2>
+        <p>Buktikan penguasaan simple past melalui tiga level: ubah kata kerja, lengkapi alibi, lalu susun kronologi. Setiap kesalahan mengurangi satu nyawa.</p>
+        <ol class="rules">
+          <li><b>1</b><span>Seret kartu ke kotak jawaban. Di ponsel, ketuk kartu lalu ketuk kotaknya.</span></li>
+          <li><b>2</b><span>Jawaban benar memberi 100 poin. Rangkaian benar menambah bonus kombo.</span></li>
+          <li><b>3</b><span>Kehabisan nyawa tidak menghentikan misi, tetapi memangkas skor akhir.</span></li>
+        </ol>
+      </article>
+      <aside class="mode-card">
+        <h2>Pilih tekanan</h2>
+        <div class="mode-list" role="group" aria-label="Mode waktu">
+          <button class="mode active" data-mode="focus"><strong>Mode Fokus</strong><small>Tanpa batas waktu</small></button>
+          <button class="mode" data-mode="sprint"><strong>Mode Sprint</strong><small>150 detik untuk semua level</small></button>
+        </div>
+        <button class="start-btn" id="startBtn">Mulai investigasi</button>
+      </aside>
+    </section>
+
+    <section class="game-panel" id="gamePanel" aria-live="polite">
+      <div class="level-head">
+        <div class="level-copy">
+          <span class="level-no" id="levelNo">Level 1 dari 3</span>
+          <h2 id="levelTitle">Jejak Kata Kerja</h2>
+          <p id="levelDesc">Cocokkan kata kerja dasar dengan bentuk lampau yang tepat.</p>
+        </div>
+        <div class="tool-row">
+          <button class="ghost-btn" id="hintBtn">Petunjuk −40</button>
+          <button class="ghost-btn" id="restartBtn">Ulangi level</button>
+        </div>
+      </div>
+      <div class="play-area">
+        <aside class="word-bank">
+          <p class="section-label" id="bankLabel">Kartu bukti</p>
+          <div class="tokens" id="tokens"></div>
+        </aside>
+        <div class="targets" id="targets"></div>
+      </div>
+      <footer class="feedback">
+        <p id="feedbackText">Seret satu kartu ke kotak yang cocok.</p>
+        <button class="primary-btn" id="nextBtn">Lanjutkan</button>
+      </footer>
+    </section>
+
+    <section class="result-panel" id="resultPanel">
+      <div class="stamp">Case<br>closed</div>
+      <h2 id="resultTitle">Kronologi terpecahkan!</h2>
+      <p id="resultCopy">Kamu berhasil menavigasi regular verbs, irregular verbs, serta urutan kejadian lampau.</p>
+      <div class="result-grid">
+        <div class="result-stat"><strong id="finalScore">0</strong><span>skor akhir</span></div>
+        <div class="result-stat"><strong id="accuracy">0%</strong><span>akurasi</span></div>
+        <div class="result-stat"><strong id="bestCombo">0×</strong><span>kombo terbaik</span></div>
+      </div>
+      <button class="secondary-btn" id="playAgainBtn">Main lagi</button>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status"></div>
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+
+  <script>
+    (function () {
+      var levels = [
+        {
+          title: "Jejak Kata Kerja",
+          desc: "Cocokkan kata kerja dasar dengan bentuk lampau yang tepat. Hati-hati: regular dan irregular tercampur.",
+          bank: "Bentuk lampau",
+          feedback: "Pasangkan setiap verb dengan bentuk past-nya.",
+          items: [
+            { prompt: "go", note: "pergi", answer: "went" },
+            { prompt: "bring", note: "membawa", answer: "brought" },
+            { prompt: "study", note: "belajar", answer: "studied" },
+            { prompt: "catch", note: "menangkap", answer: "caught" },
+            { prompt: "plan", note: "merencanakan", answer: "planned" },
+            { prompt: "hide", note: "menyembunyikan", answer: "hid" }
+          ],
+          tokens: ["planned", "went", "caught", "studied", "hid", "brought"]
+        },
+        {
+          title: "Uji Alibi",
+          desc: "Isi bagian kosong dengan verb yang sesuai konteks. Ada tiga pengecoh yang tampak masuk akal.",
+          bank: "Pilihan verb",
+          feedback: "Baca konteks sebelum memilih kartu.",
+          items: [
+            { prompt: "Maya ___ the office before sunset.", note: "leave → ?", answer: "left" },
+            { prompt: "The guard ___ a strange noise at 9 PM.", note: "hear → ?", answer: "heard" },
+            { prompt: "We did not ___ the locked door.", note: "Setelah did not, gunakan base verb.", answer: "open" },
+            { prompt: "___ Raka call the police last night?", note: "Pertanyaan simple past memakai auxiliary.", answer: "Did" },
+            { prompt: "They ___ the missing folder under the desk.", note: "find → ?", answer: "found" }
+          ],
+          tokens: ["heard", "Did", "opened", "left", "found", "open", "did", "find"]
+        },
+        {
+          title: "Rekonstruksi Kronologi",
+          desc: "Susun lima kejadian dari yang paling awal hingga paling akhir. Perhatikan penanda waktu dan hubungan sebab-akibat.",
+          bank: "Kartu kejadian",
+          feedback: "Susun dari kejadian pertama sampai terakhir.",
+          sequence: true,
+          items: [
+            { prompt: "Urutan pertama", answer: "At 7:45, Lina arrived at the library." },
+            { prompt: "Urutan kedua", answer: "Ten minutes later, she noticed an open window." },
+            { prompt: "Urutan ketiga", answer: "She called the guard before entering the room." },
+            { prompt: "Urutan keempat", answer: "After the guard arrived, they checked the shelves." },
+            { prompt: "Urutan terakhir", answer: "Finally, they found the missing map behind a cabinet." }
+          ],
+          tokens: [
+            "After the guard arrived, they checked the shelves.",
+            "At 7:45, Lina arrived at the library.",
+            "Finally, they found the missing map behind a cabinet.",
+            "She called the guard before entering the room.",
+            "Ten minutes later, she noticed an open window."
+          ]
+        }
+      ];
+
+      var state = {
+        mode: "focus", level: 0, score: 0, lives: 3, combo: 0, bestCombo: 0,
+        correct: 0, attempts: 0, time: 150, timerId: null, selected: null,
+        completed: [], hintUsed: false
+      };
+
+      var $ = function (id) { return document.getElementById(id); };
+      var els = {
+        intro: $("intro"), game: $("gamePanel"), result: $("resultPanel"),
+        score: $("score"), lives: $("lives"), timer: $("timer"), timeStat: $("timeStat"),
+        progress: $("progressBar"), progressText: $("progressText"),
+        levelNo: $("levelNo"), levelTitle: $("levelTitle"), levelDesc: $("levelDesc"),
+        bankLabel: $("bankLabel"), tokens: $("tokens"), targets: $("targets"),
+        feedback: $("feedbackText"), next: $("nextBtn"), hint: $("hintBtn"),
+        restart: $("restartBtn"), toast: $("toast"), confetti: $("confetti")
+      };
+
+      function shuffle(arr) {
+        var copy = arr.slice();
+        for (var i = copy.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var t = copy[i]; copy[i] = copy[j]; copy[j] = t;
+        }
+        return copy;
+      }
+
+      function updateStats() {
+        els.score.textContent = Math.max(0, state.score);
+        els.lives.textContent = state.lives > 0 ? Array(state.lives + 1).join("● ").trim() : "—";
+        els.lives.parentElement.classList.toggle("danger", state.lives <= 1);
+        els.timer.textContent = state.mode === "focus" ? "∞" : formatTime(state.time);
+        els.timeStat.classList.toggle("danger", state.mode === "sprint" && state.time <= 30);
+      }
+
+      function formatTime(s) {
+        var m = Math.floor(s / 60), r = s % 60;
+        return m + ":" + (r < 10 ? "0" : "") + r;
+      }
+
+      function setFeedback(text, type) {
+        els.feedback.textContent = text;
+        els.feedback.className = type || "";
+      }
+
+      function showToast(text) {
+        els.toast.textContent = text;
+        els.toast.classList.add("show");
+        clearTimeout(showToast.t);
+        showToast.t = setTimeout(function () { els.toast.classList.remove("show"); }, 1700);
+      }
+
+      function renderLevel() {
+        var level = levels[state.level];
+        state.selected = null;
+        state.completed = [];
+        state.hintUsed = false;
+        els.next.classList.remove("show");
+        els.levelNo.textContent = "Level " + (state.level + 1) + " dari " + levels.length;
+        els.levelTitle.textContent = level.title;
+        els.levelDesc.textContent = level.desc;
+        els.bankLabel.textContent = level.bank;
+        setFeedback(level.feedback);
+        els.hint.disabled = false;
+        els.hint.textContent = "Petunjuk −40";
+        els.tokens.className = "tokens" + (level.sequence ? " sequence-tokens" : "");
+        els.targets.className = "targets" + (level.sequence ? " sequence-targets" : "");
+        els.tokens.innerHTML = "";
+        els.targets.innerHTML = "";
+
+        shuffle(level.tokens).forEach(function (word, index) {
+          var btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "token";
+          btn.draggable = true;
+          btn.dataset.value = word;
+          btn.dataset.id = "t" + state.level + "-" + index;
+          btn.textContent = word;
+          btn.setAttribute("aria-label", "Kartu " + word + ". Ketuk untuk memilih.");
+          bindToken(btn);
+          els.tokens.appendChild(btn);
+        });
+
+        level.items.forEach(function (item, index) {
+          var row = document.createElement("div");
+          row.className = "target";
+          if (level.sequence) {
+            var no = document.createElement("span"); no.className = "ordinal"; no.textContent = String(index + 1).padStart(2, "0");
+            row.appendChild(no);
+          } else {
+            var prompt = document.createElement("div");
+            prompt.className = "prompt";
+            prompt.appendChild(document.createTextNode(item.prompt));
+            if (item.note) { var small = document.createElement("small"); small.textContent = item.note; prompt.appendChild(small); }
+            row.appendChild(prompt);
+          }
+          var zone = document.createElement("div");
+          zone.className = "dropzone";
+          zone.tabIndex = 0;
+          zone.dataset.answer = item.answer;
+          zone.dataset.index = index;
+          zone.textContent = level.sequence ? "Taruh kejadian di sini" : "Taruh kartu";
+          zone.setAttribute("role", "button");
+          zone.setAttribute("aria-label", "Kotak jawaban untuk " + item.prompt);
+          bindZone(zone);
+          row.appendChild(zone);
+          els.targets.appendChild(row);
+        });
+        updateProgress();
+      }
+
+      function bindToken(token) {
+        token.addEventListener("dragstart", function (e) {
+          if (token.classList.contains("used")) return;
+          e.dataTransfer.setData("text/plain", token.dataset.id);
+          e.dataTransfer.effectAllowed = "move";
+          token.classList.add("dragging");
+        });
+        token.addEventListener("dragend", function () { token.classList.remove("dragging"); });
+        token.addEventListener("click", function () { selectToken(token); });
+        token.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectToken(token); }
+        });
+      }
+
+      function selectToken(token) {
+        if (token.classList.contains("used")) return;
+        var old = els.tokens.querySelector(".selected");
+        if (old) old.classList.remove("selected");
+        if (state.selected === token.dataset.id) {
+          state.selected = null;
+          showToast("Pilihan dibatalkan");
+        } else {
+          state.selected = token.dataset.id;
+          token.classList.add("selected");
+          showToast("“" + token.dataset.value + "” dipilih — sekarang ketuk kotak jawaban.");
+        }
+      }
+
+      function bindZone(zone) {
+        zone.addEventListener("dragover", function (e) { e.preventDefault(); zone.classList.add("over"); });
+        zone.addEventListener("dragleave", function () { zone.classList.remove("over"); });
+        zone.addEventListener("drop", function (e) {
+          e.preventDefault(); zone.classList.remove("over");
+          var token = els.tokens.querySelector('[data-id="' + e.dataTransfer.getData("text/plain") + '"]');
+          if (token) checkAnswer(token, zone);
+        });
+        zone.addEventListener("click", function () {
+          if (zone.classList.contains("correct")) return;
+          if (!state.selected) { showToast("Pilih kartu terlebih dahulu."); return; }
+          var token = els.tokens.querySelector('[data-id="' + state.selected + '"]');
+          if (token) checkAnswer(token, zone);
+        });
+        zone.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); zone.click(); }
+        });
+      }
+
+      function checkAnswer(token, zone) {
+        if (zone.classList.contains("correct") || token.classList.contains("used")) return;
+        state.attempts++;
+        if (token.dataset.value === zone.dataset.answer) {
+          state.combo++;
+          state.bestCombo = Math.max(state.bestCombo, state.combo);
+          state.correct++;
+          var bonus = Math.min(100, (state.combo - 1) * 20);
+          state.score += 100 + bonus;
+          token.classList.add("used");
+          token.classList.remove("selected");
+          zone.textContent = token.dataset.value;
+          zone.classList.add("correct");
+          zone.setAttribute("aria-label", "Jawaban benar: " + token.dataset.value);
+          state.selected = null;
+          state.completed.push(Number(zone.dataset.index));
+          setFeedback(bonus ? "Tepat! Kombo " + state.combo + "× memberi bonus +" + bonus + "." : "Tepat! +100 poin.", "good");
+          if (state.completed.length === levels[state.level].items.length) completeLevel();
+        } else {
+          state.combo = 0;
+          state.lives = Math.max(0, state.lives - 1);
+          state.score = Math.max(0, state.score - 25);
+          zone.classList.add("wrong");
+          setTimeout(function () { zone.classList.remove("wrong"); }, 450);
+          setFeedback("Belum tepat. Baca petunjuk dan coba kartu lain.", "bad");
+          showToast("−1 nyawa, −25 poin");
+        }
+        updateStats();
+        updateProgress();
+      }
+
+      function updateProgress() {
+        var total = levels.reduce(function (n, level) { return n + level.items.length; }, 0);
+        var before = levels.slice(0, state.level).reduce(function (n, level) { return n + level.items.length; }, 0);
+        var done = before + state.completed.length;
+        var pct = Math.round(done / total * 100);
+        els.progress.style.width = pct + "%";
+        els.progressText.textContent = "Progres " + done + "/" + total;
+      }
+
+      function completeLevel() {
+        els.next.classList.add("show");
+        els.next.textContent = state.level === levels.length - 1 ? "Lihat hasil" : "Buka level berikutnya";
+        setFeedback("Level tuntas. Semua bukti cocok!", "good");
+        burst(18);
+      }
+
+      function useHint() {
+        if (state.hintUsed) return;
+        var level = levels[state.level];
+        var targetIndex = -1;
+        for (var i = 0; i < level.items.length; i++) {
+          if (state.completed.indexOf(i) === -1) { targetIndex = i; break; }
+        }
+        if (targetIndex < 0) return;
+        state.hintUsed = true;
+        state.score = Math.max(0, state.score - 40);
+        els.hint.disabled = true;
+        els.hint.textContent = "Petunjuk dipakai";
+        var answer = level.items[targetIndex].answer;
+        var token = Array.prototype.find.call(els.tokens.children, function (el) { return el.dataset.value === answer; });
+        var zone = els.targets.querySelector('[data-index="' + targetIndex + '"]');
+        if (token) token.classList.add("selected");
+        if (zone) zone.classList.add("over");
+        setTimeout(function () { if (token) token.classList.remove("selected"); if (zone) zone.classList.remove("over"); }, 2200);
+        showToast("Kartu dan kotak yang cocok telah disorot.");
+        updateStats();
+      }
+
+      function restartLevel() {
+        var answered = state.completed.length;
+        state.score = Math.max(0, state.score - answered * 50);
+        state.combo = 0;
+        renderLevel();
+        updateStats();
+        showToast("Level diulang. Sebagian poin level ini dikurangi.");
+      }
+
+      function startGame() {
+        clearInterval(state.timerId);
+        state.level = 0; state.score = 0; state.lives = 3; state.combo = 0; state.bestCombo = 0;
+        state.correct = 0; state.attempts = 0; state.time = 150;
+        els.intro.style.display = "none";
+        els.result.classList.remove("active");
+        els.game.classList.add("active");
+        renderLevel(); updateStats();
+        if (state.mode === "sprint") {
+          state.timerId = setInterval(function () {
+            state.time--;
+            updateStats();
+            if (state.time <= 0) { clearInterval(state.timerId); finishGame(true); }
+          }, 1000);
+        }
+      }
+
+      function finishGame(timedOut) {
+        clearInterval(state.timerId);
+        els.game.classList.remove("active");
+        els.result.classList.add("active");
+        var accuracy = state.attempts ? Math.round(state.correct / state.attempts * 100) : 0;
+        var timeBonus = state.mode === "sprint" && !timedOut ? state.time * 5 : 0;
+        var lifeBonus = state.lives * 150;
+        state.score += timeBonus + lifeBonus;
+        $("finalScore").textContent = state.score;
+        $("accuracy").textContent = accuracy + "%";
+        $("bestCombo").textContent = state.bestCombo + "×";
+        if (timedOut) {
+          $("resultTitle").textContent = "Waktu habis — bukti tersimpan";
+          $("resultCopy").textContent = "Kamu mencapai sebagian misi. Coba lagi dan prioritaskan konteks sebelum mengejar kecepatan.";
+        } else if (accuracy >= 90) {
+          $("resultTitle").textContent = "Kronologi terpecahkan!";
+          $("resultCopy").textContent = "Analisis tajam: kamu menguasai regular verbs, irregular verbs, auxiliary “did”, dan urutan peristiwa.";
+          burst(45);
+        } else {
+          $("resultTitle").textContent = "Kasus berhasil ditutup";
+          $("resultCopy").textContent = "Misi selesai. Coba lagi untuk meningkatkan akurasi dan mempertahankan kombo lebih panjang.";
+        }
+        els.progress.style.width = timedOut ? els.progress.style.width : "100%";
+        els.progressText.textContent = timedOut ? "Waktu habis" : "Misi selesai";
+      }
+
+      function burst(count) {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        var colors = ["var(--orange)", "var(--teal)", "var(--gold)", "var(--navy)"];
+        for (var i = 0; i < count; i++) {
+          var bit = document.createElement("i");
+          bit.style.left = Math.random() * 100 + "%";
+          bit.style.background = colors[i % colors.length];
+          bit.style.animationDelay = Math.random() * .35 + "s";
+          bit.style.transform = "rotate(" + Math.random() * 180 + "deg)";
+          els.confetti.appendChild(bit);
+          setTimeout(function (node) { node.remove(); }, 2100, bit);
+        }
+      }
+
+      document.querySelectorAll(".mode").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".mode").forEach(function (b) { b.classList.remove("active"); });
+          btn.classList.add("active"); state.mode = btn.dataset.mode; updateStats();
+        });
+      });
+      $("startBtn").addEventListener("click", startGame);
+      els.next.addEventListener("click", function () {
+        if (state.level < levels.length - 1) { state.level++; renderLevel(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+        else finishGame(false);
+      });
+      els.hint.addEventListener("click", useHint);
+      els.restart.addEventListener("click", restartLevel);
+      $("playAgainBtn").addEventListener("click", function () {
+        els.result.classList.remove("active"); els.intro.style.display = "grid";
+        els.progress.style.width = "0%"; els.progressText.textContent = "Siap mulai";
+        updateStats(); window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+      updateStats();
+    })();
+  </script>
+</body>
+</html>
