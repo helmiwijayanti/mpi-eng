@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kuis — How to Pay using S Pay Later</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-stage="10">
+<header class="topbar"><div class="wrap"><strong>How to Pay using S Pay Later</strong><span>Bahasa Inggris • SMP 9 • Procedure</span></div></header>
+<main class="wrap">
+<nav class="dots" aria-label="Peta progres"><span>Tahap:</span><a data-stage="1" href="index.html">1</a><a data-stage="2" href="tujuan.html">2</a><a data-stage="3" href="apersepsi.html">3</a><a data-stage="4" href="asesmen-awal.html">4</a><a data-stage="5" href="materi-1.html">5</a><a data-stage="6" href="materi-2.html">6</a><a data-stage="7" href="arena.html">7</a><a data-stage="8" href="tantangan.html">8</a><a data-stage="9" href="lkpd.html">9</a><a data-stage="10" href="kuis.html">10</a><a data-stage="11" href="refleksi.html">11</a><a data-stage="12" href="asesmen-akhir.html">12</a><a data-stage="13" href="penutup.html">13</a></nav>
+<h2>✏️ Kuis: 8 Soal Campuran</h2>
+<p>🟢 mudah = memahami, 🟡 sedang = menerapkan, 🔴 menantang = menganalisis. Soal 🔴 wajib disertai alasan di kolomnya. Skor = benar ÷ 8 × 100.</p>
+<div id="quiz"></div>
+<p id="hasil" class="feedback" aria-live="polite">Terjawab: 0/8 • Benar: 0 • Skor sementara: 0 dari 100</p>
+<nav class="pager"><a class="btn" data-nav-prev href="lkpd.html">◀ KEMBALI</a><a class="btn btn-primary" data-nav-next href="refleksi.html">LANJUT ▶</a></nav>
+<p class="small muted center">Tahap 10 dari 13 — Kuis</p>
+</main>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  var qs = [
+    { q: "What is the social function of the text “How to Pay using SPayLater”?", level: "🟢 MUDAH", levelClass: "green", options: ["To entertain readers with a story", "To tell readers how to pay step by step", "To describe a famous person", "To persuade readers to buy shoes"], answer: 1, feedback: "Procedure text bertujuan memberi tahu cara melakukan sesuatu lewat langkah berurutan." },
+    { q: "Which sequence word is correct for the FIRST step?", level: "🟢 MUDAH", levelClass: "green", options: ["Finally", "After that", "First", "Then"], answer: 2, feedback: "“First” menandai langkah pertama; “finally” untuk langkah terakhir." },
+    { q: "After tapping Checkout, what should you do next?", level: "🟡 SEDANG", levelClass: "yellow", options: ["Pay the bill immediately", "Choose SPayLater as the payment method", "Choose the item again", "Close the app"], answer: 1, feedback: "Setelah checkout, pilih metode pembayaran dulu — di sini SPayLater — sebelum memilih tenor dan konfirmasi." },
+    { q: "Rani buys shoes for Rp240.000 with tenor 3× (no admin fee in this example). How much is each instalment?", level: "🟡 SEDANG", levelClass: "yellow", options: ["Rp240.000", "Rp120.000", "Rp80.000", "Rp60.000"], answer: 2, feedback: "240.000 ÷ 3 = 80.000, jadi cicilannya Rp80.000 per bulan." },
+    { q: "Which item is NOT a material/requirement for paying with SPayLater?", level: "🟡 SEDANG", levelClass: "yellow", options: ["A phone with the shopping app", "An active SPayLater account", "Enough limit for the price", "A printed school textbook"], answer: 3, feedback: "Buku cetak tidak dibutuhkan untuk checkout; yang dibutuhkan adalah HP, aplikasi, akun aktif, dan limit cukup." },
+    { q: "HOTS — Rani's limit is Rp500.000. She wants shoes for Rp600.000. What is the wisest decision, and why?", level: "🔴 MENANTANG", levelClass: "red", reason: true, options: ["Buy them anyway and hope the app allows it", "Wait, save more, or choose cheaper shoes within her limit", "Borrow a friend's account without asking", "Cancel her account immediately"], answer: 1, feedback: "Keputusan bijak adalah menunggu/menabung atau memilih yang sesuai limit, karena memaksakan pembelian di atas limit berisiko ditolak atau menimbulkan utang yang sulit dibayar." },
+    { q: "HOTS — Find the error: “Confirm the payment, then choose the tenor.” Why is it wrong?", level: "🔴 MENANTANG", levelClass: "red", reason: true, options: ["Because confirmation must come after choosing the tenor", "Because the app has no tenor option", "Because PIN is not needed", "Because checkout comes last"], answer: 0, feedback: "Tenor menentukan besar cicilan yang disetujui, jadi tenor harus dipilih sebelum konfirmasi, bukan sesudahnya." },
+    { q: "What should you do before the due date?", level: "🟢 MUDAH", levelClass: "green", options: ["Ignore the bill", "Pay the bill on time", "Delete the app", "Buy another item"], answer: 1, feedback: "Membayar sebelum jatuh tempo menghindari denda keterlambatan dan menjaga riwayat pembayaran tetap baik." }
+  ];
+  window.SPayLater.renderQuiz("quiz", qs, "hasil");
+})();
+</script>
+</body>
+</html>

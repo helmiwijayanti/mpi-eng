@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LKPD Digital — How to Pay using S Pay Later</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-stage="9">
+<header class="topbar"><div class="wrap"><strong>How to Pay using S Pay Later</strong><span>Bahasa Inggris • SMP 9 • Procedure</span></div></header>
+<main class="wrap">
+<nav class="dots" aria-label="Peta progres"><span>Tahap:</span><a data-stage="1" href="index.html">1</a><a data-stage="2" href="tujuan.html">2</a><a data-stage="3" href="apersepsi.html">3</a><a data-stage="4" href="asesmen-awal.html">4</a><a data-stage="5" href="materi-1.html">5</a><a data-stage="6" href="materi-2.html">6</a><a data-stage="7" href="arena.html">7</a><a data-stage="8" href="tantangan.html">8</a><a data-stage="9" href="lkpd.html">9</a><a data-stage="10" href="kuis.html">10</a><a data-stage="11" href="refleksi.html">11</a><a data-stage="12" href="asesmen-akhir.html">12</a><a data-stage="13" href="penutup.html">13</a></nav>
+<h2>📝 LKPD Digital: Jelaskan dengan Kata Sendiri</h2>
+<p>Isi semua kolom. Jawaban tersimpan otomatis di perangkat ini. Setelah selesai, kamu bisa menyalin atau mencetaknya.</p>
+<div class="card" id="lkpdArea">
+<label for="lkpdNama">Nama</label>
+<input id="lkpdNama" type="text" data-save="lkpdNama" placeholder="Namamu">
+<label for="lkpdKelas">Kelas</label>
+<input id="lkpdKelas" type="text" data-save="lkpdKelas" placeholder="Contoh: 9A">
+<label for="lkpdTujuan">1. Tujuan (Goal) procedure ini apa?</label>
+<textarea id="lkpdTujuan" data-save="lkpdTujuan" placeholder="Tulis dalam 1 kalimat…"></textarea>
+<label for="lkpdLangkah">2. Tulis 7 langkah membayar pakai SPayLater dengan urutan benar (boleh Bahasa Inggris + artinya).</label>
+<textarea id="lkpdLangkah" data-save="lkpdLangkah" placeholder="First, … Then, … After that, …"></textarea>
+<label for="lkpdHitung">3. Hitunganku: harga Rp… tenor …× = cicilan Rp… per bulan. Alasan memilih tenor itu:</label>
+<textarea id="lkpdHitung" data-save="lkpdHitung" placeholder="Tulis hitungan + alasanmu…"></textarea>
+<label for="lkpdJelaskan">4. Komunikasi — Jelaskan dengan kata-katamu sendiri dalam 5 kalimat, seolah mengajari teman:</label>
+<textarea id="lkpdJelaskan" data-save="lkpdJelaskan" placeholder="Kalimat 1… 2… 3… 4… 5…"></textarea>
+<label for="lkpdBijak">5. Keputusan bijak: kapan SPayLater boleh dipakai, dan kapan sebaiknya tidak? Beri alasan.</label>
+<textarea id="lkpdBijak" data-save="lkpdBijak" placeholder="Tulis keputusan + alasanmu…"></textarea>
+</div>
+<div class="callout"><strong>Rubrik komunikasi sederhana (untuk refleksi diri):</strong> Isi lengkap (1–4), urutan benar (1–4), bahasa jelas (1–4), percaya diri saat menyampaikan (1–4). Total maksimal 16. Rubrik lengkap untuk guru ada di halaman guru.</div>
+<button type="button" class="btn btn-primary" id="salinLkpd">SALIN HASIL</button>
+<button type="button" class="btn" onclick="window.print()">CETAK</button>
+<div id="salinStatus" class="feedback" style="display:none" aria-live="polite"></div>
+<nav class="pager"><a class="btn" data-nav-prev href="tantangan.html">◀ KEMBALI</a><a class="btn btn-primary" data-nav-next href="kuis.html">LANJUT ▶</a></nav>
+<p class="small muted center">Tahap 9 dari 13 — LKPD Digital</p>
+</main>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  document.getElementById("salinLkpd").addEventListener("click", function () {
+    function v(id) { return document.getElementById(id).value || "-"; }
+    var text = "LKPD — How to Pay using S Pay Later\nNama: " + v("lkpdNama") + "\nKelas: " + v("lkpdKelas") + "\n1. Tujuan: " + v("lkpdTujuan") + "\n2. Langkah: " + v("lkpdLangkah") + "\n3. Hitungan & alasan tenor: " + v("lkpdHitung") + "\n4. Penjelasan dengan kata sendiri: " + v("lkpdJelaskan") + "\n5. Keputusan bijak: " + v("lkpdBijak");
+    var st = document.getElementById("salinStatus");
+    st.style.display = "block";
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { st.textContent = "Hasil LKPD berhasil disalin. Tempel di WhatsApp / dokumen gurumu."; }).catch(function () { st.textContent = "Gagal menyalin otomatis. Blok teks di atas secara manual."; });
+    } else { st.textContent = "Peramban ini tidak mendukung salin otomatis. Blok teks di atas secara manual."; }
+  });
+})();
+</script>
+</body>
+</html>

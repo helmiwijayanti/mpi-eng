@@ -1,0 +1,81 @@
+/* How to Pay using S Pay Later — SMP 9, Procedure. Offline, no CDN, no external fonts. */
+/* Colours: navy #1b2a4a, cyan #22d3ee, yellow #f5b301, white. Tints use navy at low opacity. */
+*{box-sizing:border-box}
+:root{--navy:#1b2a4a;--cyan:#22d3ee;--yellow:#f5b301;--white:#fff;--ink:#1b2a4a}
+html{font-size:16px}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--navy);background:var(--white);line-height:1.55}
+a{color:var(--navy)}
+.topbar{background:var(--navy);color:#fff;padding:12px 16px}
+.topbar .wrap{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.topbar strong{font-size:1rem}
+.topbar span{font-size:.85rem;opacity:.9}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px}
+main.wrap{padding-top:20px;padding-bottom:32px}
+h1{font-size:2rem;line-height:1.15;margin:.3em 0}
+h2{font-size:1.5rem;line-height:1.25;margin:.4em 0}
+h3{font-size:1.15rem;margin:.6em 0 .3em}
+p{margin:.5em 0}
+.badge{display:inline-block;background:var(--cyan);color:var(--navy);font-weight:700;padding:4px 10px;border-radius:999px;font-size:.85rem}
+.tag{display:inline-block;font-weight:700;padding:2px 9px;border-radius:999px;font-size:.8rem;border:2px solid var(--navy)}
+.tag.green{background:#e6f7e6}.tag.yellow{background:#fff3c4}.tag.red{background:#ffe3e3}
+.card{border:2px solid var(--navy);border-radius:16px;padding:18px;margin:16px 0;background:#fff}
+.card.cyan{border-color:var(--cyan)}.card.yellow{border-color:var(--yellow)}
+.callout{background:rgba(27,42,74,.06);border-left:6px solid var(--cyan);border-radius:10px;padding:14px 16px;margin:16px 0}
+.warning{background:rgba(245,179,1,.18);border-left:6px solid var(--yellow);border-radius:10px;padding:14px 16px;margin:16px 0}
+.hero{background:var(--navy);color:#fff;border-radius:20px;padding:28px 22px;margin:16px 0}
+.hero h1{color:#fff}.hero p{color:#eef6ff}
+.btn{display:inline-block;min-height:44px;line-height:44px;padding:0 20px;border-radius:999px;border:2px solid var(--navy);background:#fff;color:var(--navy);font-weight:800;text-decoration:none;text-align:center;cursor:pointer;font-size:1rem}
+.btn:hover{filter:brightness(1.05)}
+.btn-primary{background:var(--yellow);border-color:var(--navy);font-size:1.1rem;padding:0 28px}
+.btn-cyan{background:var(--cyan)}
+.pager{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:24px 0}
+.pager .btn{flex:1 1 140px}
+.dots{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0;align-items:center}
+.dots a{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border:2px solid var(--navy);border-radius:50%;text-decoration:none;font-weight:800;font-size:.9rem;background:#fff}
+.dots a.done{background:var(--cyan)}.dots a.current{background:var(--yellow)}
+.dots span{font-weight:700;margin-right:4px}
+label{font-weight:700;display:block;margin:12px 0 4px}
+input[type="text"],input[type="number"],textarea,select{width:100%;padding:12px;border:2px solid var(--navy);border-radius:12px;font:inherit;min-height:44px;background:#fff;color:var(--navy)}
+textarea{min-height:96px;resize:vertical}
+.choice{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 14px;border:2px solid var(--navy);border-radius:12px;background:#fff;cursor:pointer;font:inherit;min-height:44px}
+.choice:hover{background:rgba(34,211,238,.15)}
+.choice.selected{border-color:var(--cyan);background:rgba(34,211,238,.22);outline:3px solid var(--cyan)}
+.choice.correct{border-color:#1a7a1a;background:#e6f7e6}
+.choice.wrong{border-color:#b00020;background:#ffe3e3}
+.feedback{border-radius:12px;padding:12px 14px;margin:12px 0;font-weight:600;background:rgba(34,211,238,.18);border:2px solid var(--cyan)}
+.feedback.good{background:#e6f7e6;border-color:#1a7a1a}
+.feedback.bad{background:#ffe3e3;border-color:#b00020}
+.visual{border:2px solid var(--navy);border-radius:16px;padding:16px;margin:14px 0;background:#fff}
+.visual svg{width:100%;height:auto;display:block}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.step{border:2px solid var(--navy);border-radius:14px;padding:14px;background:#fff}
+.step b{display:block;font-size:1.05rem}
+table{width:100%;border-collapse:collapse;margin:12px 0}
+th,td{border:1px solid var(--navy);padding:8px;text-align:left;vertical-align:top}
+th{background:var(--navy);color:#fff}
+.timer{font-size:2rem;font-weight:900;text-align:center}
+.score{font-size:1.4rem;font-weight:900}
+.small{font-size:.9rem}.muted{opacity:.8}
+.center{text-align:center}
+.celebrate{font-size:3rem;text-align:center}
+input[type="range"]{width:100%;min-height:44px;accent-color:var(--navy)}
+:focus-visible{outline:4px solid var(--yellow);outline-offset:2px}
+@media(max-width:600px){
+  .grid{grid-template-columns:1fr}
+  h1{font-size:1.6rem}h2{font-size:1.3rem}
+  .topbar .wrap{flex-direction:column;align-items:flex-start}
+  .dots a{width:32px;height:32px}
+}
+/* Big screen / TV 52 inch: width >= 1400px */
+@media(min-width:1400px){
+  html{font-size:24px}
+  .wrap{max-width:1240px}
+  .btn{min-height:72px;line-height:72px;padding:0 28px;font-size:1.1rem}
+  .dots a{width:56px;height:56px;font-size:1rem}
+  input[type="text"],input[type="number"],textarea,select,.choice{min-height:72px}
+  .hero{padding:40px}
+}
+@media print{
+  .topbar,.dots,.pager,.no-print{display:none !important}
+  body{font-size:13px}.card{break-inside:avoid}
+}

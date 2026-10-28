@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tantangan Bermain — How to Pay using S Pay Later</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-stage="8">
+<header class="topbar"><div class="wrap"><strong>How to Pay using S Pay Later</strong><span>Bahasa Inggris • SMP 9 • Procedure</span></div></header>
+<main class="wrap">
+<nav class="dots" aria-label="Peta progres"><span>Tahap:</span><a data-stage="1" href="index.html">1</a><a data-stage="2" href="tujuan.html">2</a><a data-stage="3" href="apersepsi.html">3</a><a data-stage="4" href="asesmen-awal.html">4</a><a data-stage="5" href="materi-1.html">5</a><a data-stage="6" href="materi-2.html">6</a><a data-stage="7" href="arena.html">7</a><a data-stage="8" href="tantangan.html">8</a><a data-stage="9" href="lkpd.html">9</a><a data-stage="10" href="kuis.html">10</a><a data-stage="11" href="refleksi.html">11</a><a data-stage="12" href="asesmen-akhir.html">12</a><a data-stage="13" href="penutup.html">13</a></nav>
+<h2>🎮 Tantangan Bermain: Susun Langkah</h2>
+<p>Sentuh langkah-langkah di bawah <strong>dalam urutan yang benar</strong>. Kamu punya <strong>120 detik</strong>.</p>
+<div class="card">
+<p class="timer" id="timer">⏱ 120 detik</p>
+<p class="center"><span class="score" id="skorGame">Skor: 0</span> &nbsp;|&nbsp; Langkah benar: <span id="benarGame">0/7</span> &nbsp;|&nbsp; Salah sentuh: <span id="salahGame">0</span></p>
+<p class="small center">Skor dihitung transparan: tiap langkah benar 10 poin (maksimal 70), bonus selesai tepat waktu 30 poin, dikurangi 5 poin per salah sentuh, minimal 0.</p>
+<button type="button" class="btn btn-primary" id="mulaiGame">MULAI</button>
+<button type="button" class="btn" id="ulangiGame">ULANGI</button>
+<div id="daftarLangkah" style="margin-top:14px"></div>
+<div id="feedbackGame" class="feedback" style="display:none" aria-live="polite"></div>
+</div>
+<nav class="pager"><a class="btn" data-nav-prev href="arena.html">◀ KEMBALI</a><a class="btn btn-primary" data-nav-next href="lkpd.html">LANJUT ▶</a></nav>
+<p class="small muted center">Tahap 8 dari 13 — Tantangan Bermain (120 detik)</p>
+</main>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  var correct = [
+    "1. Open the app and log in.",
+    "2. Choose the item and add it to the cart.",
+    "3. Tap Checkout.",
+    "4. Choose SPayLater as the payment method.",
+    "5. Choose the tenor (1×, 3×, or 6×).",
+    "6. Check the total and confirm with your PIN.",
+    "7. Pay each bill before its due date."
+  ];
+  // Fixed shuffled order (by correct index): 3, 6, 1, 7, 4, 2, 5
+  var shuffled = [correct[2], correct[5], correct[0], correct[6], correct[3], correct[1], correct[4]];
+  var list = document.getElementById("daftarLangkah");
+  var timerEl = document.getElementById("timer");
+  var skorEl = document.getElementById("skorGame");
+  var benarEl = document.getElementById("benarGame");
+  var salahEl = document.getElementById("salahGame");
+  var fb = document.getElementById("feedbackGame");
+  var nextIndex = 0, mistakes = 0, seconds = 120, interval = null, started = false, finished = false;
+  function showFb(text, good) {
+    fb.style.display = "block";
+    fb.className = "feedback " + (good ? "good" : "bad");
+    fb.textContent = text;
+  }
+  function updateScore() {
+    var score = nextIndex * 10 - mistakes * 5;
+    if (finished) { score += 30; }
+    if (score < 0) { score = 0; }
+    skorEl.textContent = "Skor: " + score;
+    benarEl.textContent = nextIndex + "/7";
+    salahEl.textContent = mistakes;
+    return score;
+  }
+  function build() {
+    list.innerHTML = "";
+    shuffled.forEach(function (text) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "choice"; b.textContent = text;
+      b.addEventListener("click", function () {
+        if (!started) { showFb("Tekan MULAI dulu untuk memulai timer 120 detik.", false); return; }
+        if (finished) { return; }
+        if (text === correct[nextIndex]) {
+          b.classList.add("correct"); b.disabled = true; nextIndex++;
+          showFb("Benar! Langkah berikutnya: " + (nextIndex < 7 ? correct[nextIndex] : "selesai."), true);
+          if (nextIndex === 7) { finish(true); }
+        } else {
+          mistakes++;
+          showFb("Belum tepat. Langkah itu bukan urutan berikutnya — pikirkan lagi: apa yang harus dilakukan sebelum itu?", false);
+        }
+        updateScore();
+      });
+      list.appendChild(b);
+    });
+  }
+  function finish(onTime) {
+    if (finished) { return; }
+    finished = true;
+    if (interval) { clearInterval(interval); }
+    var score = updateScore();
+    showFb(onTime ? "Selesai! Skor akhir: " + score + " dari 100. Kamu berhasil menyusun semua langkah sebelum waktu habis." : "Waktu habis! Skor akhir: " + score + " dari 100. Tekan ULANGI dan coba lagi.", onTime);
+    list.querySelectorAll("button").forEach(function (b) { b.disabled = true; });
+  }
+  document.getElementById("mulaiGame").addEventListener("click", function () {
+    if (started) { return; }
+    started = true;
+    timerEl.textContent = "⏱ 120 detik";
+    interval = setInterval(function () {
+      seconds--;
+      timerEl.textContent = "⏱ " + seconds + " detik";
+      if (seconds <= 0) { finish(false); }
+    }, 1000);
+    showFb("Timer berjalan! Sentuh langkah pertama yang benar.", true);
+  });
+  document.getElementById("ulangiGame").addEventListener("click", function () { window.location.reload(); });
+  build(); updateScore();
+})();
+</script>
+</body>
+</html>

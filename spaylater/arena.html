@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arena Interaktif — How to Pay using S Pay Later</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-stage="7">
+<header class="topbar"><div class="wrap"><strong>How to Pay using S Pay Later</strong><span>Bahasa Inggris • SMP 9 • Procedure</span></div></header>
+<main class="wrap">
+<nav class="dots" aria-label="Peta progres"><span>Tahap:</span><a data-stage="1" href="index.html">1</a><a data-stage="2" href="tujuan.html">2</a><a data-stage="3" href="apersepsi.html">3</a><a data-stage="4" href="asesmen-awal.html">4</a><a data-stage="5" href="materi-1.html">5</a><a data-stage="6" href="materi-2.html">6</a><a data-stage="7" href="arena.html">7</a><a data-stage="8" href="tantangan.html">8</a><a data-stage="9" href="lkpd.html">9</a><a data-stage="10" href="kuis.html">10</a><a data-stage="11" href="refleksi.html">11</a><a data-stage="12" href="asesmen-akhir.html">12</a><a data-stage="13" href="penutup.html">13</a></nav>
+<h2>🧪 Arena Interaktif: Ubah, Amati, Simpulkan</h2>
+<p>Di sini kamu yang mengendalikan. Coba dua widget di bawah, jangan hanya membaca.</p>
+
+<div class="card cyan">
+<h3>Widget 1 — Kalkulator Tenor (Numerasi)</h3>
+<p class="small">Contoh sederhana di media ini: tanpa biaya admin, jadi total = harga, dan cicilan = harga ÷ tenor. Di aplikasi nyata, selalu cek biaya admin/bunga sebelum konfirmasi.</p>
+<label for="harga">Harga barang: <span id="hargaLabel">Rp240.000</span></label>
+<input id="harga" type="range" min="100000" max="1000000" step="50000" value="240000">
+<p>Pilih tenor:</p>
+<button type="button" class="btn tenor" data-tenor="1">1×</button>
+<button type="button" class="btn btn-cyan tenor" data-tenor="3">3×</button>
+<button type="button" class="btn tenor" data-tenor="6">6×</button>
+<div id="hasilKalkulator" class="feedback" aria-live="polite"></div>
+<label for="kesimpulanArena">Kesimpulan saya dari kalkulator ini:</label>
+<textarea id="kesimpulanArena" data-save="arenaKesimpulan" placeholder="Contoh: Tenor lebih panjang membuat cicilan lebih kecil, tapi…"></textarea>
+</div>
+
+<div class="card yellow">
+<h3>Widget 2 — Temukan Kesalahan! (Penalaran Kritis)</h3>
+<p>Satu langkah di bawah ini SALAH urutannya. Sentuh langkah yang salah, lalu tulis alasanmu.</p>
+<div id="langkahSalah">
+<button type="button" class="choice" data-ok="false">1. Open the app and choose the item.</button>
+<button type="button" class="choice" data-ok="false">2. Tap Checkout.</button>
+<button type="button" class="choice" data-ok="false">3. Choose SPayLater as the payment method.</button>
+<button type="button" class="choice" data-ok="true">4. Confirm the payment and enter your PIN — BEFORE choosing the tenor.</button>
+<button type="button" class="choice" data-ok="false">5. Pay each bill before its due date.</button>
+</div>
+<div id="feedbackSalah" class="feedback" style="display:none"></div>
+<label for="alasanSalah">Alasan saya langkah itu salah:</label>
+<textarea id="alasanSalah" data-save="arenaAlasan" placeholder="Tulis alasanmu…"></textarea>
+</div>
+
+<nav class="pager"><a class="btn" data-nav-prev href="materi-2.html">◀ KEMBALI</a><a class="btn btn-primary" data-nav-next href="tantangan.html">LANJUT ▶</a></nav>
+<p class="small muted center">Tahap 7 dari 13 — Arena Interaktif</p>
+</main>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  var harga = document.getElementById("harga");
+  var label = document.getElementById("hargaLabel");
+  var out = document.getElementById("hasilKalkulator");
+  var tenor = 3;
+  function render() {
+    var h = parseInt(harga.value, 10);
+    label.textContent = window.SPayLater.fmtRupiah(h);
+    var cicilan = h / tenor;
+    out.textContent = "Harga " + window.SPayLater.fmtRupiah(h) + " dengan tenor " + tenor + "×: cicilan " + window.SPayLater.fmtRupiah(cicilan) + " per bulan, total " + window.SPayLater.fmtRupiah(h) + ", komitmen selama " + tenor + " bulan. Tenor lebih panjang = cicilan lebih kecil, tapi kamu terikat lebih lama.";
+  }
+  harga.addEventListener("input", render);
+  document.querySelectorAll(".tenor").forEach(function (b) {
+    b.addEventListener("click", function () {
+      tenor = parseInt(b.getAttribute("data-tenor"), 10);
+      document.querySelectorAll(".tenor").forEach(function (x) { x.classList.remove("btn-cyan"); });
+      b.classList.add("btn-cyan");
+      render();
+    });
+  });
+  render();
+  document.querySelectorAll("#langkahSalah .choice").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var fb = document.getElementById("feedbackSalah");
+      fb.style.display = "block";
+      if (b.getAttribute("data-ok") === "true") {
+        b.classList.add("correct");
+        fb.className = "feedback good";
+        fb.textContent = "Tepat! Tenor harus dipilih dulu sebelum konfirmasi, karena tenor menentukan besar cicilan yang kamu setujui. Mengonfirmasi dulu berarti kamu menyetujui jumlah yang belum kamu pilih.";
+      } else {
+        b.classList.add("wrong");
+        fb.className = "feedback bad";
+        fb.textContent = "Langkah itu urutannya sudah benar. Cari lagi: langkah mana yang melompati pemilihan tenor?";
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

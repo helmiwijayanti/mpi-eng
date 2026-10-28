@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Asesmen Awal — How to Pay using S Pay Later</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-stage="4">
+<header class="topbar"><div class="wrap"><strong>How to Pay using S Pay Later</strong><span>Bahasa Inggris • SMP 9 • Procedure</span></div></header>
+<main class="wrap">
+<nav class="dots" aria-label="Peta progres"><span>Tahap:</span><a data-stage="1" href="index.html">1</a><a data-stage="2" href="tujuan.html">2</a><a data-stage="3" href="apersepsi.html">3</a><a data-stage="4" href="asesmen-awal.html">4</a><a data-stage="5" href="materi-1.html">5</a><a data-stage="6" href="materi-2.html">6</a><a data-stage="7" href="arena.html">7</a><a data-stage="8" href="tantangan.html">8</a><a data-stage="9" href="lkpd.html">9</a><a data-stage="10" href="kuis.html">10</a><a data-stage="11" href="refleksi.html">11</a><a data-stage="12" href="asesmen-akhir.html">12</a><a data-stage="13" href="penutup.html">13</a></nav>
+<h2>🔍 Asesmen Awal: Seberapa jauh kamu sudah tahu?</h2>
+<p>4 soal diagnostik. Tidak ada nilai jelek di sini — hasilnya menunjukkan bagian mana yang perlu kamu fokuskan. Setiap soal punya pembahasan.</p>
+<div id="quiz"></div>
+<p id="hasil" class="feedback" aria-live="polite">Terjawab: 0/4 • Benar: 0 • Skor sementara: 0 dari 100</p>
+<nav class="pager"><a class="btn" data-nav-prev href="apersepsi.html">◀ KEMBALI</a><a class="btn btn-primary" data-nav-next href="materi-1.html">LANJUT ▶</a></nav>
+<p class="small muted center">Tahap 4 dari 13 — Asesmen Awal</p>
+</main>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  var qs = [
+    { q: "What is the main purpose of a procedure text?", options: ["To tell a funny story", "To explain how to do something step by step", "To describe a beautiful place", "To announce an event"], answer: 1, feedback: "Procedure text menjelaskan cara melakukan sesuatu lewat langkah-langkah berurutan." },
+    { q: "Which word is an imperative verb (kata perintah)?", options: ["Beautiful", "Quickly", "Choose", "Happiness"], answer: 2, feedback: "“Choose” adalah kata perintah — pembaca langsung diminta melakukan sesuatu." },
+    { q: "What is the first step when you want to pay with SPayLater?", options: ["Pay the bill", "Open the shopping app and choose the item", "Choose the tenor", "Confirm the payment"], answer: 1, feedback: "Kamu harus membuka aplikasi dan memilih barang dulu sebelum checkout dan memilih metode bayar." },
+    { q: "“Pay later” means…", options: ["The item is free", "You pay now in cash", "You pay at a later date, before the due date", "You never need to pay"], answer: 2, feedback: "“Pay later” artinya bayar belakangan, tetap wajib dibayar sebelum jatuh tempo." }
+  ];
+  window.SPayLater.renderQuiz("quiz", qs, "hasil");
+})();
+</script>
+</body>
+</html>
